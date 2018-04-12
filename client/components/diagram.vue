@@ -101,6 +101,11 @@ export default {
 		stroke: #8dc4e3;
 }
 
+.cb-text-node .label {
+	width: 150px;
+}
+
+
 .cb-carousel-node .body {
 		width: 150px;
 		height: 150px;

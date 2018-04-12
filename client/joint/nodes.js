@@ -1,26 +1,54 @@
 import joint from 'jointjs'
 
-const TextNode = joint.shapes.devs.Model.extend({
-  markup: '<g class="cb-text-node">' +
-    '<rect class="body" stroke-width="1" rx="5px" ry="5px"></rect>' +
-    '<text class="label" y="0.8em" xml:space="preserve" font-size="14" text-anchor="middle" font-family="Arial, helvetica, sans-serif">' +
-    '<tspan id="v-18" dy="0em" x="0" class="v-line"></tspan>' + //Where your label goes
-    '</text>' +
-    '<g class="inPorts"/>' +
-    '<g class="outPorts"/>' +
-    '</g>'
-});
-
-const CarouselNode = joint.shapes.devs.Model.extend({
-  markup: '<g class="cb-carousel-node">' +
-    '<rect class="body" stroke-width="1" rx="5px" ry="5px"></rect>' +
-    '<text class="label" y="0.8em" xml:space="preserve" font-size="14" text-anchor="middle" font-family="Arial, helvetica, sans-serif">' +
-    '<tspan id="v-18" dy="0em" x="0" text-anchor="middle" class="v-line"></tspan>' + //Where your label goes
-    '</text>' +
-    '<g class="inPorts"/>' +
-    '<g class="outPorts"/>' +
-    '</g>'
-});
+function getGenericForType(label, color) {
+  return new joint.shapes.devs.Model({
+    // The majority of applications does not need elements to be rotatable.
+    // Thus no `.rotatable` group is used in this example.
+    // e.g. `element.rotate(45)` has no effect.
+    // There is also no need for the `.scalable` group. Using special attributes `ref-width`
+    // and `ref-height` does the same trick here (it expands the SVG Rectangle based on the
+    // current model dimensions).
+    markup: '<rect/><text/>',
+    size: {
+      width: 120,
+      height: 120
+    },
+    inPorts: ['in'],
+    outPorts: ['out'],
+    attrs: {
+      rect: {
+        // Using of special 'ref-like` attributes it's not generally the most
+        // performer. In this particular case it's different though.
+        // If the `ref` attribute is not defined all the metrics (width, height, x, y)
+        // are taken from the model. There is no need to ask the browser for
+        // an element bounding box.
+        // All calculation are done just in Javascript === very fast.
+        'ref-width': '100%',
+        'ref-height': '100%',
+        'stroke': color,
+        'stroke-width': 2,
+        'fill': '#fff'
+      },
+      text: {
+        'text': label,
+        'fill': color,
+        // Please see the `ref-width` & `ref-height` comment.
+        'ref-x': '50%',
+        'ref-y': '50%',
+        'font-size': '0.8em',
+        // Do not use special attribute `x-alignment` when not necessary.
+        // It calls getBBox() on the SVGText element internally. Measuring text
+        // in the browser is usually the slowest.
+        // `text-anchor` attribute does the same job here (works for the text elements only).
+        'text-anchor': 'middle',
+        // Do not use special attribute `y-alignment`. See above.
+        // `y="0.3em"` gives the best result.
+        'y': '.3em'
+      },
+    },
+    z: 2
+  });
+}
 
 
 export function getNodeForType(nodeType) {
@@ -29,79 +57,10 @@ export function getNodeForType(nodeType) {
 
   switch (nodeType.type) {
     case "text":
-      return new TextNode({
-        position: {
-          x: 20,
-          y: 200
-        },
-        inPorts: ['in'],
-        outPorts: ['out'],
-        attrs: {
-          '.body': {
-            width: '200',
-            height: '200'
-          },
-          '.label': {
-            text: nodeType.label,
-          },
-          '.element-node': {
-            'data-color': '#FEFEFF'
-          }
-        },
-        step: {
-          next_step: "bot",
-          message: "this"
-        }
-      })
+      return getGenericForType(nodeType.label, '#8dc4e3')
     case "carousel":
-      return new CarouselNode({
-        position: {
-          x: 20,
-          y: 200
-        },
-        inPorts: ['in'],
-        outPorts: ['out'],
-        attrs: {
-          '.body': {
-            width: '200',
-            height: '200'
-          },
-          '.label': {
-            text: nodeType.label,
-          },
-          '.element-node': {
-            'data-color': '#FEFEFF'
-          }
-        },
-        step: {
-          next_step: "bot",
-          message: "this"
-        }
-      })
+      return getGenericForType(nodeType.label, '#db8338')
     default:
-      return new joint.shapes.devs.Model({
-        position: {
-          x: 20,
-          y: 200
-        },
-        inPorts: ['in'],
-        outPorts: ['out1', 'out2'],
-        attrs: {
-          '.body': {
-            width: '140',
-            height: '60'
-          },
-          '.label': {
-            text: nodeType.label,
-          },
-          '.element-node': {
-            'data-color': '#FEFEFF'
-          }
-        },
-        step: {
-          next_step: "bot",
-          message: "this"
-        }
-      })
+      return getGenericForType(nodeType.label, '#ccc')
     }
   }
