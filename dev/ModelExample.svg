@@ -1,0 +1,34 @@
+<g id="v-3" class="joint-viewport">
+
+  <g model-id="3953a396-19c0-4381-b2a9-b1571c3088e9" id="j_1" class="joint-cell joint-type-devs joint-type-devs-model joint-element joint-theme-default" data-type="devs.Model" magnet="false" fill="#ffffff" stroke="none" transform="translate(20,200)">
+
+    <g class="rotatable" id="v-5">
+      <rect class="body" id="v-7" stroke="#000" width="80" height="80"></rect>
+
+      <text class="label" id="v-6" font-size="18" xml:space="preserve" y="0.8em" text-anchor="middle" fill="#000" transform="matrix(1,0,0,1,40,10)">
+        <tspan id="v-8" class="v-line" dy="0em">Other</tspan>
+      </text>
+
+      <g class="joint-port" id="v-11" transform="matrix(1,0,0,1,0,40)">
+        <circle class="port-body" id="v-9" port="in" port-group="in" fill="#fff" stroke="#000" r="10" magnet="true"></circle>
+        <text class="port-label" id="v-10" xml:space="preserve" y=".3em" fill="#000" transform="matrix(1,0,0,1,-15,10)" text-anchor="end">
+          <tspan id="v-18" class="v-line" dy="0em">in</tspan>
+        </text>
+      </g>
+
+      <g class="joint-port" id="v-14" transform="matrix(1,0,0,1,80,20)">
+        <circle class="port-body" id="v-12" port="out1" port-group="out" fill="#fff" stroke="#000" r="10" magnet="true"></circle>
+        <text class="port-label" id="v-13" xml:space="preserve" y=".3em" fill="#000" transform="matrix(1,0,0,1,15,10)" text-anchor="start">
+          <tspan id="v-19" class="v-line" dy="0em">out1</tspan>
+        </text>
+      </g>
+
+      <g class="joint-port" id="v-17" transform="matrix(1,0,0,1,80,60)">
+        <circle class="port-body" id="v-15" port="out2" port-group="out" fill="#fff" stroke="#000" r="10" magnet="true"></circle>
+        <text class="port-label" id="v-16" xml:space="preserve" y=".3em" fill="#000" transform="matrix(1,0,0,1,15,10)" text-anchor="start">
+          <tspan id="v-20" class="v-line" dy="0em">out2</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</g>
