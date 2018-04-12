@@ -1,12 +1,11 @@
 <template>
   <div>
     <el-row>
-      <!-- <el-col :span="1">
-              <sideMenu />
-      </el-col> -->
-
-      <el-col :span="24" :offset="0" >
-        <diagram />
+      <el-col :span="20" :push="2" >
+        <diagram :nodes="nodes"/>
+      </el-col>
+       <el-col :span="2" :pull="20">
+        <sideMenu @newnode='onNewNode'/>
       </el-col>
     </el-row>
 </div>
@@ -22,9 +21,18 @@ export default {
     sideMenu,
     diagram
   },
+  data() {
+    return {
+      nodes: []  
+    }
+  },
   methods: {
     onElement() {
       console.log("on element")
+    },
+    onNewNode(node) {
+      this.nodes = [...this.nodes, node]
+      console.log('this.nodes : ', this.nodes)
     }
   }
 }

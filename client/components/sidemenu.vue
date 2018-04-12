@@ -12,6 +12,10 @@
       <span slot="title">Components</span>
     </template>
     <el-menu-item-group title="Messaging">
+      <el-menu-item v-for="(node, index) in nodesTypes" @click="handleAddNode(node)" :index="String(index+1)" :key="index">
+        <i :class="node.icon"></i>
+        <span slot="title">{{node.label}}</span>
+      </el-menu-item>
     </el-menu-item-group>
     <el-menu-item-group title="Generic Template">
     </el-menu-item-group>
@@ -35,7 +39,19 @@
         isCollapsed: true,
         active: false,
         rightArrow: 'el-icon-arrow-right',
-        leftArrow: 'el-icon-arrow-left'
+        leftArrow: 'el-icon-arrow-left',
+        nodesTypes: [
+          {
+            type: 'text',
+            label: 'text',
+            icon: 'el-icon-tickets'
+          },
+          {
+            type: 'carousel',
+            label: 'carousel',
+            icon: 'el-icon-picture'
+          }
+        ]
       }
     },
     methods: {
@@ -50,6 +66,9 @@
       },
       handleClose(key, keyPath) {
         console.log(key, keyPath);
+      },
+      handleAddNode(node) {
+        this.$emit('newnode', {...node})
       }
     }
   }

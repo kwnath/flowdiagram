@@ -1,139 +1,136 @@
 <template>
-    <div id="container">
-        <div id="paper" :style="{ height: '100vh', width: '100vw' + 'px' }"></div>
-        <button @click="exportGraph">Export</button>
-    </div>
+	<div id="container">
+		<div id="paper" :style="{ height: '100vh', width: '100vw' + 'px' }" :nodes="graphNodes"></div>
+		<button @click="exportGraph">Export</button>
+	</div>
 </template>
 
 <script>
+
+
 import _ from 'lodash'
 
-
+let graph
 
 export default {
-    data() {
-        return {
-            width: '',
-            graphData: ''
-        }
-    },
 
-    mounted() {
-        this.intialiseGraph()
-        // console.log(this.width)
-    },    
-    methods: {
-        exportGraph() {
-            console.log(this.graphData)
-        },
-        addPort() {
+	props: {
+		nodes: {
+			type: Array,
+			default: []
+		}
+	},
 
-        },
-        intialiseGraph() {
-            console.log(window.innerWidth)
-            const graph = new joint.dia.Graph;
-            const paper = new joint.dia.Paper({
-                el: document.getElementById('paper'),
-                width: window.innerWidth,
-                gridSize: 1,
-                model: graph,
-                snapLinks: true,
-                linkPinning: false,
-                embeddingMode: true,
-                highlighting: {
-                    'default': {
-                        name: 'stroke',
-                        options: {
-                            padding: 6
-                        }
-                    },
-                    'embedding': {
-                        name: 'addClass',
-                        options: {
-                            className: 'highlighted-parent'
-                        }
-                    }
-                },
+	data() {
+		return {
+			width: '',
+			graphData: '',
+		}
+	},
 
-                validateEmbedding: function(childView, parentView) {
+	computed: {
+		graphNodes() {
+			// filter and replace to only create once
+			const nodes = this.nodes.map((node, index) => {
+				const graphNode = new joint.shapes.devs.Atomic({
+					position: {
+							x: 20 + ( 200 * index ),
+							y: 200
+					},
+					inPorts: ['in'],
+					outPorts: ['out1', 'out2'],
+					step: {
+						next_step: "bot",
+						message: "this"
+					}
+				})
+				return graphNode
+			})
 
-                    return parentView.model instanceof joint.shapes.devs.Coupled;
-                },
+			if(graph){
+				graph.addCells(nodes);	
+			}
 
-                validateConnection: function(sourceView, sourceMagnet, targetView, targetMagnet) {
+			
 
-                    return sourceMagnet != targetMagnet;
-                },
+			/* rounded corners */
 
-                interactive: function(cellView) {
-                    if (cellView.model instanceof joint.dia.Link) {
-                        // Disable the default vertex add functionality on pointerdown.
-                        return { vertexAdd: false };
-                    }
-                    return true;
-                }
-            });
+			/*_.each(nodes, function(element) {
+					element.attr({
+							'.body': {
+									'rx': 6,
+									'ry': 6
+							}
+					});
+			});*/
 
-            const a1 = new joint.shapes.devs.Atomic({
+			return nodes
+		}
+	},
 
-                position: {
-                    x: 360,
-                    y: 260
-                },
-                inPorts: ['in'],
-                outPorts: ['out1', 'out2'],
-                step: {
-                    next_step: "bot",
-                    message: "this"
-                }
-            });
+	mounted() {
+			this.intialiseGraph()
+	},
 
-            const a2 = new joint.shapes.devs.Atomic({
+	beforeUpdate() {
+		console.log('beforeUpdate')
+		//this.graphData = graph.toJSON()
+  },
 
-                position: {
-                    x: 50,
-                    y: 160
-                },
-                outPorts: ['out'],
-                step: {
-                    next_step: "bot",
-                    message: "this"
-                }
-            });
+	methods: {
+		exportGraph() {
+				console.log(this.graphData)
+		},
+		addPort() {
 
-            const a3 = new joint.shapes.devs.Atomic({
-                position: {
-                    x: 650,
-                    y: 50
-                },
-                size: {
-                    width: 100,
-                    height: 300
-                },
-                inPorts: ['a', 'b'],
-                step: {
-                    next_step: "bot",
-                    message: "this"
-                }
-            });
+		},
+		intialiseGraph() {
+			console.log(window.innerWidth)
+			graph = new joint.dia.Graph()
+			const paper = new joint.dia.Paper({
+				
+				el: document.getElementById('paper'),
+				width: window.innerWidth,
+				gridSize: 1,
+				model: graph,
+				snapLinks: true,
+				linkPinning: false,
+				embeddingMode: true,
+				highlighting: {
+						'default': {
+								name: 'stroke',
+								options: {
+										padding: 6
+								}
+						},
+						'embedding': {
+								name: 'addClass',
+								options: {
+										className: 'highlighted-parent'
+								}
+						}
+				},
 
-            graph.addCells([a1, a2, a3]);
+				validateEmbedding: function(childView, parentView) {
 
-            /* rounded corners */
+						return parentView.model instanceof joint.shapes.devs.Coupled;
+				},
 
-            _.each([a1, a2, a3], function(element) {
+				validateConnection: function(sourceView, sourceMagnet, targetView, targetMagnet) {
 
-                element.attr({
-                    '.body': {
-                        'rx': 6,
-                        'ry': 6
-                    }
-                });
-            }); 
+						return sourceMagnet != targetMagnet;
+				},
 
-            this.graphData = graph.toJSON()
-        }
-    }
+				interactive: function(cellView) {
+						if (cellView.model instanceof joint.dia.Link) {
+								// Disable the default vertex add functionality on pointerdown.
+								return { vertexAdd: false };
+						}
+						return true;
+				}
+			});
+		}
+	}
 }
 
 
