@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-col :span="20" :push="2" >
-        <diagram :nodes="nodes"/>
+        <diagram :graph="graph"/>
       </el-col>
        <el-col :span="2" :pull="20">
         <sideMenu @newnode='onNewNode'/>
@@ -16,6 +16,9 @@
 import sideMenu from '../components/sidemenu';
 import diagram from '../components/diagram';
 
+import joint from 'jointjs'
+import { getNodeForType } from '../joint/nodes'
+
 export default {
   components: {
     sideMenu,
@@ -23,17 +26,20 @@ export default {
   },
   data() {
     return {
-      nodes: []  
+      graph: new joint.dia.Graph()
     }
   },
   methods: {
     onElement() {
       console.log("on element")
     },
-    onNewNode(node) {
-      this.nodes = [...this.nodes, node]
-      console.log('this.nodes : ', this.nodes)
+    onNewNode(nodeType) {
+      this.graph.addCell(getNodeForType(nodeType))
+      //this.graph.stamp = new Date().getMilliseconds()
+      //this.$forceUpdate()
     }
+  },
+  mounted() {
   }
 }
 </script>

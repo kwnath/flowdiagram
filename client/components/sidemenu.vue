@@ -43,13 +43,18 @@
         nodesTypes: [
           {
             type: 'text',
-            label: 'text',
+            label: 'Text Message',
             icon: 'el-icon-tickets'
           },
           {
             type: 'carousel',
-            label: 'carousel',
+            label: 'Carousel',
             icon: 'el-icon-picture'
+          },
+          {
+            type: 'other',
+            label: 'Other',
+            icon: 'el-icon-view'
           }
         ]
       }
@@ -67,8 +72,8 @@
       handleClose(key, keyPath) {
         console.log(key, keyPath);
       },
-      handleAddNode(node) {
-        this.$emit('newnode', {...node})
+      handleAddNode(nodeType) {
+        this.$emit('newnode', {...nodeType})
       }
     }
   }

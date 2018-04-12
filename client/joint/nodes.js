@@ -1,6 +1,6 @@
 import joint from 'jointjs'
 
-export const TextNode = joint.shapes.devs.Model.extend({
+const TextNode = joint.shapes.devs.Model.extend({
   markup: '<g class="cb-text-node">' +
     '<rect class="body" stroke-width="1" rx="5px" ry="5px"></rect>' +
     '<text class="label" y="0.8em" xml:space="preserve" font-size="14" text-anchor="middle" font-family="Arial, helvetica, sans-serif">' +
@@ -8,33 +8,30 @@ export const TextNode = joint.shapes.devs.Model.extend({
     '</text>' +
     '<g class="inPorts"/>' +
     '<g class="outPorts"/>' +
-    '</g>',
-  portMarkup: '<g class="port port"><circle class="port-body"/></g>'
+    '</g>'
 });
 
-export const CarouselNode = joint.shapes.devs.Model.extend({
+const CarouselNode = joint.shapes.devs.Model.extend({
   markup: '<g class="cb-carousel-node">' +
     '<rect class="body" stroke-width="1" rx="5px" ry="5px"></rect>' +
     '<text class="label" y="0.8em" xml:space="preserve" font-size="14" text-anchor="middle" font-family="Arial, helvetica, sans-serif">' +
-    '<tspan id="v-18" dy="0em" x="0" class="v-line"></tspan>' + //Where your label goes
+    '<tspan id="v-18" dy="0em" x="0" text-anchor="middle" class="v-line"></tspan>' + //Where your label goes
     '</text>' +
     '<g class="inPorts"/>' +
     '<g class="outPorts"/>' +
-    '</g>',
-  portMarkup: '<g class="port port"><circle class="port-body"/></g>'
+    '</g>'
 });
 
 
+export function getNodeForType(nodeType) {
 
+  console.log('joint.shapes.devs.Model : ', joint.shapes.devs.Model.prototype.markup) 
 
-
-
-export function getNodeForType(node, index) {
-  switch (node.type) {
+  switch (nodeType.type) {
     case "text":
       return new TextNode({
         position: {
-          x: 20 + (200 * index),
+          x: 20,
           y: 200
         },
         inPorts: ['in'],
@@ -45,7 +42,7 @@ export function getNodeForType(node, index) {
             height: '200'
           },
           '.label': {
-            text: node.label,
+            text: nodeType.label,
           },
           '.element-node': {
             'data-color': '#FEFEFF'
@@ -59,7 +56,7 @@ export function getNodeForType(node, index) {
     case "carousel":
       return new CarouselNode({
         position: {
-          x: 20 + (200 * index),
+          x: 20,
           y: 200
         },
         inPorts: ['in'],
@@ -70,7 +67,7 @@ export function getNodeForType(node, index) {
             height: '200'
           },
           '.label': {
-            text: node.label,
+            text: nodeType.label,
           },
           '.element-node': {
             'data-color': '#FEFEFF'
@@ -84,7 +81,7 @@ export function getNodeForType(node, index) {
     default:
       return new joint.shapes.devs.Model({
         position: {
-          x: 20 + (200 * index),
+          x: 20,
           y: 200
         },
         inPorts: ['in'],
@@ -95,7 +92,7 @@ export function getNodeForType(node, index) {
             height: '60'
           },
           '.label': {
-            text: node.label,
+            text: nodeType.label,
           },
           '.element-node': {
             'data-color': '#FEFEFF'

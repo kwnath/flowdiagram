@@ -1,6 +1,6 @@
 <template>
 	<div id="container">
-		<div id="paper" :style="{ height: '100vh', width: '100vw' + 'px' }" :nodes="graphNodes"></div>
+		<div id="paper" :style="{ height: '100vh', width: '100vw' + 'px' }"></div>
 		<button @click="exportGraph">Export</button>
 	</div>
 </template>
@@ -9,73 +9,32 @@
 
 
 import _ from 'lodash'
+import joint from 'jointjs'
+import { getNodeForType } from '../joint/nodes'
 
-let graph
+let graph = new joint.dia.Graph()
+
 
 export default {
 
 	props: {
-		nodes: {
-			type: Array,
-			default: []
+		graph: {
+			type: Object
 		}
 	},
 
 	data() {
 		return {
-			width: '',
 			graphData: '',
 		}
 	},
 
-	computed: {
-		graphNodes() {
-			// filter and replace to only create once
-			const nodes = this.nodes.map((node, index) => {
-				const graphNode = new joint.shapes.devs.Atomic({
-					position: {
-							x: 20 + ( 200 * index ),
-							y: 200
-					},
-					inPorts: ['in'],
-					outPorts: ['out1', 'out2'],
-					step: {
-						next_step: "bot",
-						message: "this"
-					}
-				})
-				return graphNode
-			})
-
-			if(graph){
-				graph.addCells(nodes);	
-			}
-
-			
-
-			/* rounded corners */
-
-			/*_.each(nodes, function(element) {
-					element.attr({
-							'.body': {
-									'rx': 6,
-									'ry': 6
-							}
-					});
-			});*/
-
-			return nodes
-		}
-	},
-
 	mounted() {
-			this.intialiseGraph()
+		this.$watch('graph', () => {
+			console.log('graph watch')
+		})
+		this.intialiseGraph(this.graph)
 	},
-
-	beforeUpdate() {
-		console.log('beforeUpdate')
-		//this.graphData = graph.toJSON()
-  },
 
 	methods: {
 		exportGraph() {
@@ -84,9 +43,9 @@ export default {
 		addPort() {
 
 		},
-		intialiseGraph() {
+		intialiseGraph(graph) {
 			console.log(window.innerWidth)
-			graph = new joint.dia.Graph()
+			
 			const paper = new joint.dia.Paper({
 				
 				el: document.getElementById('paper'),
@@ -112,13 +71,12 @@ export default {
 				},
 
 				validateEmbedding: function(childView, parentView) {
-
 						return parentView.model instanceof joint.shapes.devs.Coupled;
 				},
 
 				validateConnection: function(sourceView, sourceMagnet, targetView, targetMagnet) {
-
-						return sourceMagnet != targetMagnet;
+						return sourceMagnet != targetMagnet &&
+						sourceMagnet.getAttribute('port-group') !== targetMagnet.getAttribute('port-group');
 				},
 
 				interactive: function(cellView) {
@@ -132,6 +90,25 @@ export default {
 		}
 	}
 }
-
-
 </script>
+
+<style>
+
+.cb-text-node .body {
+		width: 150px;
+		height: 150px;
+		fill: #FFF;
+		stroke: #8dc4e3;
+}
+
+.cb-carousel-node .body {
+		width: 150px;
+		height: 150px;
+		fill: #FFF;
+		stroke: #db8338;
+}
+.port-label {
+	font-size: 0.8em;
+}
+
+</style>
